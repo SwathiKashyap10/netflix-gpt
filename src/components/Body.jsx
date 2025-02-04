@@ -1,6 +1,8 @@
 import React from 'react';
 import Login from './login';
 import Browse from './Browse';
+import Main from './Main';
+import SignUpS1 from './SignUpS1';
 
 import {createBrowserRouter} from "react-router-dom";
 import { RouterProvider } from 'react-router-dom';
@@ -10,8 +12,12 @@ const Body = () => {
   const appRouter = createBrowserRouter([
     {
         path:"/",
-        element:<Login/>
+        element:<SignUpS1/>
     },
+    {
+      path:"/login",
+      element:<Login/>
+  },
     {
         path:"/browse",
         element:<Browse/>

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useState,useRef } from 'react';
 import {validateEmail,validatePassword} from '../utils/validateSignIn';
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../utils/firebase';
 
 
 const LoginForm = () => {
-  const [emailValidMes,setEmailValidMes] = useState(null)
+  const [emailValidMes,setEmailValidMes] = useState(null);
   const [passValidMes,setPassValidMes] = useState(null);
 
   const email = useRef();
@@ -20,18 +20,17 @@ const LoginForm = () => {
       setPassValidMes(passValidity);
 
       if(emailValidity === null && passValidity === null){
-        //then sign up the user (firebase sign up logic)
-        createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        //then sign in the user (firebase sign up logic)
+          signInWithEmailAndPassword(auth, email.current.value, password.current.value)
           .then((userCredential) => {
-            // Signed up 
+            // Signed in 
             const user = userCredential.user;
             console.log(user);
-            // ...
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            setPassValidMes(errorCode + "-" + errorMessage);
+            console.log(errorCode + "-" + errorMessage);
           });
       }
   }
