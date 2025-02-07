@@ -3,6 +3,7 @@ import { useState,useRef } from 'react';
 import {validateEmail,validatePassword} from '../utils/validateSignIn';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../utils/firebase';
+import { useNavigate } from 'react-router-dom';
 
 
 const LoginForm = () => {
@@ -11,6 +12,7 @@ const LoginForm = () => {
 
   const email = useRef();
   const password = useRef();
+  const navigate = useNavigate();
 
   const handelFormValidation = (e) => {
       e.preventDefault();
@@ -26,6 +28,7 @@ const LoginForm = () => {
             // Signed in 
             const user = userCredential.user;
             console.log(user);
+            navigate("/browse");
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -39,7 +42,7 @@ const LoginForm = () => {
     <div>
         <div>
             <form className='absolute text-white z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/70 w-lg px-16 pt-16 pb-36'>
-                <h3>Sign In</h3>
+                <h3 className='text-3xl font-bold'>Sign In</h3>
                 <input ref={email} type="email" placeholder='Email or Mobile Number'className={`w-full px-4 py-3 mt-4 mb-3 ${
                 emailValidMes ? "border-2 border-red-500" : "border-2 border-gray-500 "}`} /><br/>
                 {emailValidMes && <p className='text-red-600 text-sm'>{emailValidMes}</p>}
