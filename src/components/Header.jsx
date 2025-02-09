@@ -1,28 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { auth } from '../utils/firebase';
 import { useNavigate } from 'react-router-dom';
-import {  signOut } from "firebase/auth";
-import { useSelector } from 'react-redux';
+import {  onAuthStateChanged, signOut } from "firebase/auth";
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser, removeUser } from '../utils/userSlice';
+import { LOGO, PROFILE_ICON } from '../utils/constant';
 
 const Header = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handelSignOut = () => {
        signOut(auth).then(() => {
-         navigate("/")
+        //...
        }).catch((error) => {
          // An error happened.
     });
   }
 
+  useEffect(()=>{
+    // add user to our appStore as soon as he/she signs up/signs in 
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/auth.user
+        const {uid,email,displayName} = user;
+        dispatch(addUser({uid:uid,email:email,displayName:displayName}));
+        navigate("/browse");
+        // ...
+      } else {
+        // User is signed out
+        dispatch(removeUser());
+        navigate("/login");
+      }
+    });
+ 
+    //unsubscribing when component unmounts
+    return () => unsubscribe();
+
+  },[]);
+
   return(
-    <div>
+    <div className='absolute w-screen text-white z-40'>
       <div className='pt-3 pl-7 flex  items-center'>
-      <img className="w-32" src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production/consent/87b6a5c0-0104-4e96-a291-092c11350111/01938dc4-59b3-7bbc-b635-c4131030e85f/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png" alt="logo"/>
+      <img className="w-32" src={LOGO} alt="logo"/>
       <div className='ml-10'>
         <ul className='flex space-x-5 cursor-pointer'>
           <li>Home</li>
@@ -40,14 +65,14 @@ const Header = () => {
           <li><i class="fa-solid fa-bell text-xl"></i></li>
           <li>
             <span className='flex items-center space-x-1.5'>
-            <img onClick={() => setIsOpen(!isOpen)} className='w-9' src='https://wallpapers.com/images/high/netflix-profile-pictures-1000-x-1000-88wkdmjrorckekha.webp' alt="error"></img>
+            <img onClick={() => setIsOpen(!isOpen)} className='w-9' src={PROFILE_ICON} alt="error"></img>
             {isOpen ? <i class="fa-solid fa-caret-up"></i> : <i class="fa-solid fa-caret-down"></i>}
             </span>
           </li>
         </ul>
       </div>
       {/* drop down menu  */}
-      {isOpen && (<div className="absolute mt-96 right-10 w-56 bg-black text-white rounded-lg shadow-lg">
+      {isOpen && (<div className="absolute mt-96 right-10 w-56 bg-black text-white rounded-lg shadow-lg z-50">
           <ul className="py-2">
             <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">{user.email}</li>
             <li className="px-4 py-2 hover:bg-gray-700 cursor-pointer">Kids</li>

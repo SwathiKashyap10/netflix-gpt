@@ -3,7 +3,7 @@ import { useState,useRef } from 'react';
 import { auth } from '../utils/firebase';
 import {validateEmail,validatePassword} from '../utils/validateSignIn';
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
+import { LOGO } from '../utils/constant';
 
 const SignUpS1 = () => {
   const [emailValidMes,setEmailValidMes] = useState(null);
@@ -11,7 +11,6 @@ const SignUpS1 = () => {
     
   const email = useRef();
   const password = useRef();
-  const navigate = useNavigate();
 
   const handelSignUp = (e) => {
     e.preventDefault();
@@ -28,13 +27,10 @@ const SignUpS1 = () => {
             .then((userCredential) => {
               // Signed up 
               const user = userCredential.user;
-            //   console.log(user);
-              navigate("/browse");
             })
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
-              console.log(errorCode + " " + errorMessage);
             });
     }
   }
@@ -43,7 +39,7 @@ const SignUpS1 = () => {
     <div>
         {/* logo  */}
       <div className='flex flex-row justify-between w-full items-center pl-32 pr-32'>
-      <img className="w-48" src="https://help.nflxext.com/helpcenter/OneTrust/oneTrust_production/consent/87b6a5c0-0104-4e96-a291-092c11350111/01938dc4-59b3-7bbc-b635-c4131030e85f/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png" alt="logo"/>
+      <img className="w-48" src={LOGO} alt="logo"/>
       <button className= 'w-20 h-9 text-white rounded-lg bg-red-600 hover:bg-red-700'>Sign In</button>
       </div>
         <hr/>
