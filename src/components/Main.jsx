@@ -1,13 +1,15 @@
 import React from 'react';
-import Header from './Header';
 import { useState,useRef } from 'react';
 import { validateEmail } from '../utils/validateSignIn';
 import { LOGO } from '../utils/constant';
+import { useNavigate } from 'react-router-dom';
 
 const Main = () => {
 
     const [emailValidMes,setEmailValidMes] = useState(null);
     const email = useRef();
+    const navigate = useNavigate();
+
     const handelSignUp = (e) =>{
        e.preventDefault();
        const emailValidity = validateEmail(email.current.value);
@@ -30,10 +32,10 @@ const Main = () => {
       {/* header  */}
       <div className='absolute z-30 flex flex-row justify-between w-full items-center pl-32 pr-32'>
       <img className="w-48" src={LOGO} alt="logo"/>
-      <button className= 'w-20 h-9  text-white rounded-lg bg-red-600 hover:bg-red-700'>Sign Up</button>
+      <button onClick={()=>navigate("/signup")} className= 'w-20 h-9  text-white rounded-lg bg-red-600 hover:bg-red-700'>Sign Up</button>
       </div>
       {/* hero heading  */}
-      <div className='absolute z-30 text-white flex flex-col items-center justify-center h-screen w-screen text-center mt-[-60px]'>
+      <div className='absolute z-20 text-white flex flex-col items-center justify-center h-screen w-screen text-center mt-[-60px]'>
         <div className='max-w-2xl'>
           <p className='font-bold text-6xl leading-snug'>Unlimited movies, TV shows and more</p>
           <p className='font-bold text-lg mt-2'>Starts at ₹149. Cancel at any time.</p>

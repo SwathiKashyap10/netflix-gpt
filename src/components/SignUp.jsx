@@ -4,6 +4,7 @@ import { auth } from '../utils/firebase';
 import {validateEmail,validatePassword} from '../utils/validateSignIn';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { LOGO } from '../utils/constant';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpS1 = () => {
   const [emailValidMes,setEmailValidMes] = useState(null);
@@ -11,6 +12,7 @@ const SignUpS1 = () => {
     
   const email = useRef();
   const password = useRef();
+  const navigate = useNavigate();
 
   const handelSignUp = (e) => {
     e.preventDefault();
@@ -27,10 +29,12 @@ const SignUpS1 = () => {
             .then((userCredential) => {
               // Signed up 
               const user = userCredential.user;
+              navigate("/browse");
             })
             .catch((error) => {
               const errorCode = error.code;
               const errorMessage = error.message;
+              setPassValidMes(errorMessage);
             });
     }
   }
@@ -40,7 +44,7 @@ const SignUpS1 = () => {
         {/* logo  */}
       <div className='flex flex-row justify-between w-full items-center pl-32 pr-32'>
       <img className="w-48" src={LOGO} alt="logo"/>
-      <button className= 'w-20 h-9 text-white rounded-lg bg-red-600 hover:bg-red-700'>Sign In</button>
+      <button onClick={()=>navigate("/login")} className= 'w-20 h-9 text-white rounded-lg bg-red-600 hover:bg-red-700'>Sign In</button>
       </div>
         <hr/>
       {/* content  */}

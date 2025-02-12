@@ -3,17 +3,36 @@ import Header from './Header';
 import useNowPlayingMovies from '../hooks/useNowPlayingMovies';
 import MainContainer from './MainContainer';
 import SecondaryContainer from './SecondaryContainer';
+import usePopularMovies from '../hooks/usePopularMovies';
+import useTopRatedMovies from '../hooks/useTopRatedMovies';
+import useUpcomingMovies from '../hooks/useUpcomingMovies';
+import { useSelector } from 'react-redux';
+import SearchTab from './SearchTab';
 
 
 const Browse = () => {
 
- useNowPlayingMovies();
+  const searchTabOpen = useSelector(store => store.search.searchTabOpen);
+  const inputTraker = useSelector(store => store.inputTraker?.inputValue);
+
+  useNowPlayingMovies();
+  usePopularMovies();
+  useTopRatedMovies();
+  useUpcomingMovies();
 
   return (
     <div>
+      <div>
       <Header/>
-      <MainContainer/>
-      <SecondaryContainer/>
+      </div>
+      {searchTabOpen && inputTraker.trim() !== "" ? (
+        <SearchTab />
+      ) : (
+        <>
+          <MainContainer />
+          <SecondaryContainer />
+        </>
+      )}
     </div>
   )
 }
